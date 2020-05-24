@@ -1,0 +1,6 @@
+{
+    "config": {
+        "HelloWorld": "https://deno.land/std/examples/welcome.ts"
+    },
+    "files": ["run.json"]
+}
