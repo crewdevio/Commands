@@ -22,7 +22,7 @@ inside he writes:
    "config": {
       "yourCommand": "--[any] anyFile.ts or .js"
    },
-   "flies": ["myWatch.ts", "index.js"] // by default listen to all files
+   "files": ["myWatch.ts", "index.js"] // by default listen to all files
 }
 
 ```
