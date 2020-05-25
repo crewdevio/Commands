@@ -66,7 +66,11 @@ function runApp() {
   app = startProcess(run);
 }
 
-let files = data?.files ? data?.files : ".";
+let files: string[] | string = data?.files
+  ? data.files && data.files.length
+    ? data.files
+    : "."
+  : ".";
 
 for await (const event of Deno.watchFs(files)) {
   if (event.kind !== "access") {
