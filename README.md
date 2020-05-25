@@ -31,7 +31,7 @@ to install `Commands` for deno you must run the command:
 
 ```bash
 
-deno install --allow-read --allow-run --unstable https://raw.githubusercontent.com/buttercubz/Commands/master/Commands.ts
+deno install --allow-read --allow-run --unstable https://deno.land/x/commands/Commands.ts
 
 ```
 ## Use
