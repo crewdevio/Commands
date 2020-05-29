@@ -37,7 +37,7 @@ if (existsSync("./run.json")) {
 
 if (errorTrace.length) {
   for (const error of errorTrace) {
-    console.log(red(error) + "\n");
+    console.error(red(error) + "\n");
   }
 }
 
@@ -46,7 +46,7 @@ const run: Array<string | unknown> = ["run"];
 commands.forEach(({ name }, index) => {
   if (name === Deno.args[0]) {
     // @ts-ignore
-    commands[index].run.forEach((el) => {
+    commands[index].run.forEach((el: string) => {
       run.push(el.trim());
     });
   }
@@ -56,7 +56,7 @@ let app: Deno.Process = startProcess(run);
 
 function startProcess(args: Array<any>): Deno.Process {
   if (args.length <= 1) {
-    console.log(red("[Error]: Command not found"));
+    console.error(red("[Error]: Command not found"));
   }
   return Deno.run({ cmd: ["deno", ...args] });
 }
