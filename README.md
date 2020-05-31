@@ -1,4 +1,6 @@
-## Commands for node users
+# Commands 📦 
+
+### Commands for node users
 
 create a file called run.config
 
@@ -6,12 +8,12 @@ inside he writes:
 
 ``` yml
 config:
-  yourCommand: any
+  server: node server.js
 ```
 
 then execute with node js the file Commands.js and enter your command.
 
-## Commands for deno users
+### Commands for deno users
 
 for deno users now you can create command shortcuts to run files in deno and listen to changes in files.
 
@@ -24,37 +26,48 @@ inside he writes:
    "config": {
       "yourCommand": "--[any] anyFile.ts or .js"
    },
-   "files": ["myWatch.ts", "index.js"] // by default listen to all files
+   "files": ["myWatch.ts", "index.js"]
 }
 
 ```
 
+>__note:__ by default listen to all files
+
 to install `Commands` for deno you must run the command:
 
-```sh
-
+``` sh
 $ deno install --allow-read --allow-run --unstable https://deno.land/x/commands/Commands.ts
-
 ```
 
-install using [Trex](https://deno.land/x/trex)
+install using [Trex](https://deno.land/x/trex) package manager
 
-```sh
+``` sh
 $ Trex getTool Commands
 ```
 
 to update `Commands` run:
 
 ```sh
-
 $ deno install -f --allow-read --allow-run --unstable https://deno.land/x/commands/Commands.ts
-
 ```
 
-## Use
+## Use with deno
+
+example:
+
+in run.json
+``` json
+{
+  "config": {
+    "start": "--allow-net server.ts"
+  },
+  "files": ["app.ts", "server.ts"]
+}
+```
+in command line
 
 ```sh
-$ Commands yourCommand
+$ Commands start
 ```
 
 ## info ⚠
