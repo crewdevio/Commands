@@ -4,30 +4,59 @@ import { readFileStrSync, existsSync } from "https://deno.land/std/fs/mod.ts";
 
 import { red, green } from "https://deno.land/std/fmt/colors.ts";
 
-const data = JSON.parse(readFileStrSync("./run.json"));
+interface IrunJson {
+  config: {
+    [key: string]: string;
+  };
 
-const throttle = 500;
+  files?: string[];
+}
+/*
+ * get object data from run file
+ */
+const data = JSON.parse(readFileStrSync("./run.json")) as IrunJson;
+
+let throttle = 500;
 let timeout: number | null = null;
 
 let errorTrace: string[] = [];
 
 interface Icommands {
   name: string;
-  run: string[] | unknown;
+  run: string[];
 }
 
 const commands: Array<Icommands> = [];
 
+function logMessages() {
+  console.log(green("[0] files:"));
+  console.info(
+    red(
+      `[1] ${
+        data?.files
+          ? data?.files
+              .map((el) => {
+                console.log(" |- ", el);
+                return "";
+              })
+              .join("")
+          : "all files [ .* ]"
+      } `
+    )
+  );
+}
+
 if (existsSync("./run.json")) {
-  if (!data?.config) {
+  if (!data.config) {
     errorTrace.push("[Error]: config param not found in run.json");
   } else {
-    console.log(green("listening to changes..."));
+    console.log(green("[0] listening to changes..."));
+
+    logMessages();
 
     const entries = Object.entries(data.config);
 
     entries.forEach((entrie) => {
-      // @ts-ignore
       commands.push({ name: entrie[0], run: entrie[1].split(" ") });
     });
   }
@@ -41,20 +70,19 @@ if (errorTrace.length) {
   }
 }
 
-const run: Array<string | unknown> = ["run"];
+const args: string[] = ["run"];
 
 commands.forEach(({ name }, index) => {
   if (name === Deno.args[0]) {
-    // @ts-ignore
     commands[index].run.forEach((el: string) => {
-      run.push(el.trim());
+      args.push(el.trim());
     });
   }
 });
 
-let app: Deno.Process = startProcess(run);
+let taks: Deno.Process = startProcess(args);
 
-function startProcess(args: Array<any>): Deno.Process {
+function startProcess(args: Array<string>): Deno.Process {
   if (args.length <= 1) {
     console.error(red("[Error]: Command not found"));
   }
@@ -62,8 +90,10 @@ function startProcess(args: Array<any>): Deno.Process {
 }
 
 function runApp() {
-  app && app.close();
-  app = startProcess(run);
+  logMessages();
+
+  taks && taks.close();
+  taks = startProcess(args);
 }
 
 let files: string[] | string = data?.files
@@ -72,9 +102,11 @@ let files: string[] | string = data?.files
     : "."
   : ".";
 
-for await (const event of Deno.watchFs(files)) {
-  if (event.kind !== "access") {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(runApp, throttle);
+if (import.meta.main) {
+  for await (const event of Deno.watchFs(files)) {
+    if (event.kind !== "access") {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(runApp, throttle);
+    }
   }
 }
