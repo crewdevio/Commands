@@ -81,3 +81,5 @@ Commands for deno is created with the standard libraries which are not yet compl
 - Read: to read the run.json file
 
 - Run: to run deno in background
+
+[![nest badge](https://nest.land/badge.svg)](https://nest.land/package/Commands@1.0.2)

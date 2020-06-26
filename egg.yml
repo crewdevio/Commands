@@ -1,0 +1,11 @@
+name: Commands
+description: Create commands for deno
+version: 1.0.2
+entry: ./Commands.ts
+stable: true
+unlisted: true
+repository: https://github.com/buttercubz/Commands
+files:
+  - Commands.ts
+  - README.md
+  - run.json  
