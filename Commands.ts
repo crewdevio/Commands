@@ -1,6 +1,6 @@
 // base code https://github.com/Caesar2011/rhinoder
 
-import { readFileStrSync, existsSync } from "https://deno.land/std/fs/mod.ts";
+import { readJsonSync, existsSync } from "https://deno.land/std/fs/mod.ts";
 
 import { red, green } from "https://deno.land/std/fmt/colors.ts";
 
@@ -14,7 +14,7 @@ interface IrunJson {
 /*
  * get object data from run file
  */
-const data = JSON.parse(readFileStrSync("./run.json")) as IrunJson;
+const data = readJsonSync("./run.json") as IrunJson;
 
 let throttle = 500;
 let timeout: number | null = null;
