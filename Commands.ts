@@ -2,7 +2,7 @@
 
 import { readJsonSync, existsSync } from "https://deno.land/std/fs/mod.ts";
 
-import { red, green } from "https://deno.land/std/fmt/colors.ts";
+import { red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 
 interface IrunJson {
   config: {
@@ -16,7 +16,7 @@ interface IrunJson {
  */
 const data = readJsonSync("./run.json") as IrunJson;
 
-let throttle = 500;
+let throttle = 700;
 let timeout: number | null = null;
 
 let errorTrace: string[] = [];
@@ -29,18 +29,20 @@ interface Icommands {
 const commands: Array<Icommands> = [];
 
 function logMessages() {
-  console.log(green("[0] files:"));
+  console.clear();
+  console.log(green("[Commands]"));
+  console.log(green("[0] watching files:"));
   console.info(
     red(
       `[1] ${
         data?.files
           ? data?.files
               .map((el) => {
-                console.log(" |- ", el);
+                console.log(" |- ", yellow(el));
                 return "";
               })
               .join("")
-          : "all files [ .* ]"
+          : "- watching all files [ .* ]"
       } `
     )
   );
@@ -48,11 +50,11 @@ function logMessages() {
 
 if (existsSync("./run.json")) {
   if (!data.config) {
-    errorTrace.push("[Error]: config param not found in run.json");
+    errorTrace.push("[Error]: the config key was not found in the run.json file");
   } else {
-    console.log(green("[0] listening to changes..."));
+    console.log(green("commands starting..."));
 
-    logMessages();
+    setTimeout(logMessages, 1000);
 
     const entries = Object.entries(data.config);
 
@@ -66,11 +68,11 @@ if (existsSync("./run.json")) {
 
 if (errorTrace.length) {
   for (const error of errorTrace) {
-    console.error(red(error) + "\n");
+    throw new Error(red(error) + "\n").message;
   }
 }
 
-const args: string[] = ["run"];
+const args: string[] = [];
 
 commands.forEach(({ name }, index) => {
   if (name === Deno.args[0]) {
@@ -83,10 +85,10 @@ commands.forEach(({ name }, index) => {
 let taks: Deno.Process = startProcess(args);
 
 function startProcess(args: Array<string>): Deno.Process {
-  if (args.length <= 1) {
+  if (args.length < 1) {
     console.error(red("[Error]: Command not found"));
   }
-  return Deno.run({ cmd: ["deno", ...args] });
+  return Deno.run({ cmd: ["deno", "run", ...args] });
 }
 
 function runApp() {
@@ -106,6 +108,7 @@ if (import.meta.main) {
   for await (const event of Deno.watchFs(files)) {
     if (event.kind !== "access") {
       if (timeout) clearTimeout(timeout);
+      console.log(yellow("reloading..."));
       timeout = setTimeout(runApp, throttle);
     }
   }
