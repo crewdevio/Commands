@@ -1,10 +1,12 @@
 // base code https://github.com/Caesar2011/rhinoder
 
-import { readJsonSync, existsSync } from "https://deno.land/std/fs/mod.ts";
+import { existsSync } from "https://deno.land/std@0.74.0/fs/mod.ts";
+
+import { readJsonSync } from "https://raw.githubusercontent.com/crewdevio/Trex/master/temp_deps/writeJson.ts";
 
 import { red, green, yellow } from "https://deno.land/std/fmt/colors.ts";
 
-interface IrunJson {
+interface runJson {
   config: {
     [key: string]: string;
   };
@@ -14,19 +16,19 @@ interface IrunJson {
 /*
  * get object data from run file
  */
-const data = readJsonSync("./run.json") as IrunJson;
+const data = readJsonSync("./run.json") as runJson;
 
 let throttle = 700;
 let timeout: number | null = null;
 
 let errorTrace: string[] = [];
 
-interface Icommands {
+interface Commands {
   name: string;
   run: string[];
 }
 
-const commands: Array<Icommands> = [];
+const commands: Array<Commands> = [];
 
 function logMessages() {
   console.clear();
@@ -58,8 +60,8 @@ if (existsSync("./run.json")) {
 
     const entries = Object.entries(data.config);
 
-    entries.forEach((entrie) => {
-      commands.push({ name: entrie[0], run: entrie[1].split(" ") });
+    entries.forEach((entries) => {
+      commands.push({ name: entries[0], run: entries[1].split(" ") });
     });
   }
 } else {
@@ -82,7 +84,7 @@ commands.forEach(({ name }, index) => {
   }
 });
 
-let taks: Deno.Process = startProcess(args);
+let task: Deno.Process = startProcess(args);
 
 function startProcess(args: Array<string>): Deno.Process {
   if (args.length < 1) {
@@ -94,8 +96,8 @@ function startProcess(args: Array<string>): Deno.Process {
 function runApp() {
   logMessages();
 
-  taks && taks.close();
-  taks = startProcess(args);
+  task && task.close();
+  task = startProcess(args);
 }
 
 let files: string[] | string = data?.files
