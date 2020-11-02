@@ -19,6 +19,8 @@ then execute with node js the file Commands.js and enter your command.
 [![deno](https://img.shields.io/badge/deno-%5E1.2.0-green?logo=deno)](https://deno.land/)
 [![nest badge](https://img.shields.io/badge/available%20on-deno.land/x-blue.svg?style=flat&logo=deno)](https://deno.land/x/commands)
 
+# obsolescence information, this tool will no longer continue to be actively developed, it will only live updates that break its operation in later versions of deno. please use other alternatives such as [trex](https://github.com/crewdevio/Trex#run-scripts-experimental), [velociraptor](https://deno.land/x/velociraptor) or [denon](https://deno.land/x/denon)
+
 for deno users now you can create command shortcuts to run files in deno and listen to changes in files.
 
 create a file called run.json
